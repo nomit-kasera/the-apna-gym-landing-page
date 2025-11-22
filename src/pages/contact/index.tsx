@@ -1,12 +1,12 @@
 import Layout from "@/Components/Layout"
-import HomeScreen from "@/Modules/Home"
+import ContactusScreen from "@/Modules/ContactUs"
 
 
 
 const Home = () => {
   return (
     <Layout>
-      <HomeScreen />
+      <ContactusScreen />
     </Layout>
   )
 } 
