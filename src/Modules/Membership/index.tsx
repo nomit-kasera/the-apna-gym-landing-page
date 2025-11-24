@@ -10,12 +10,10 @@ import {
     VStack,
     Input,
     Button,
-    Select,
-    Textarea,
     Spinner
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { Check, X, Search } from "lucide-react";
+import { Check, Search } from "lucide-react";
 
 export default function MembershipScreen() {
     const [mobileNumber, setMobileNumber] = useState("");
@@ -365,7 +363,7 @@ export default function MembershipScreen() {
                                 </Heading>
 
                                 <Text color="mutedForeground" maxW="2xl" mx="auto" mb={10}>
-                                    Don't miss out on your fitness journey! Renew your membership now
+                                    Don&apos;t miss out on your fitness journey! Renew your membership now
                                     and get back to achieving your goals.
                                 </Text>
 
@@ -428,7 +426,7 @@ export default function MembershipScreen() {
                                 </Heading>
 
                                 <Text maxW="2xl" mx="auto" color="#484848" mb={10}>
-                                    We couldn't find a membership associated with this mobile number.
+                                    We couldn&apos;t find a membership associated with this mobile number.
                                     Start your fitness transformation today!
                                 </Text>
 

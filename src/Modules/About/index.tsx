@@ -67,7 +67,7 @@ export default function AboutScreen() {
                             </Text>
 
                             <Text fontSize="lg" color="#484848">
-                                Today, we're proud to serve hundreds of members, each with their own
+                                Today, we&apos;re proud to serve hundreds of members, each with their own
                                 unique fitness journey, all united by a common goal: to be stronger,
                                 healthier, and happier.
                             </Text>
@@ -195,7 +195,7 @@ export default function AboutScreen() {
                         mb={{ base: 10, md: 16 }}
                         className="text-secondary"
                     >
-                        Why We're Different
+                        Why We&apos;re Different
                     </Heading>
 
                     <VStack gap={{ base: 8, md: 10 }} align="stretch">
