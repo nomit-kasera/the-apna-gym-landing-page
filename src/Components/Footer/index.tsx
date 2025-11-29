@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Grid, GridItem, Text, VStack, Separator } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Text, VStack, Separator, HStack } from "@chakra-ui/react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -48,10 +49,46 @@ export default function Footer() {
                             Contact Info
                         </Text>
                         <VStack align="start" gap={2} fontSize="sm" opacity={0.9}>
-                            <Text>📍 123 Fitness Street, City</Text>
-                            <Text>📞 +91 98765-43210</Text>
-                            <Text>✉️ info@theapnagym.com</Text>
+                            <HStack>
+                                <MapPin size={28} />
+                                <Text>
+                                    1st floor Sai Complex, Main Road, Bishrampur, Chhattisgarh
+                                </Text>
+                            </HStack>
+
+                            <HStack>
+                                <Phone size={18} />
+                                <HStack>
+                                    <Link
+                                        href="tel:+917999693682"
+                                        color="blue.400"
+                                    >
+                                        +91 7999693682
+                                    </Link>
+
+                                    <Text>,</Text>
+
+                                    <Link
+                                        href="tel:+918234033694"
+                                        color="blue.400"
+                                    >
+                                        8234033694
+                                    </Link>
+                                </HStack>
+                            </HStack>
+
+
+                            <HStack>
+                                <Mail size={18} />
+                                <Link
+                                    href="mailto:theapnagym@gmail.com"
+                                    color="blue.400"
+                                >
+                                    theapnagym@gmail.com
+                                </Link>
+                            </HStack>
                         </VStack>
+
                     </GridItem>
 
                     {/* Column 4 */}
@@ -60,8 +97,9 @@ export default function Footer() {
                             Hours
                         </Text>
                         <VStack align="start" gap={2} fontSize="sm" opacity={0.9}>
-                            <Text>Mon - Fri: 6AM - 10PM</Text>
-                            <Text>Sat - Sun: 7AM - 8PM</Text>
+                            <Text>Mon - Sat: 5AM - 10PM</Text>
+                            <Text>Sun: 7AM - 8PM</Text>
+                            <Text>For Females: 2PM-5PM</Text>
                             <Text>Holidays: Closed</Text>
                         </VStack>
                     </GridItem>
@@ -71,9 +109,21 @@ export default function Footer() {
                 {/* Bottom section */}
                 <Box borderTop="1px" borderColor="gray.700" pt={8} textAlign="center">
                     <Text fontSize="sm" opacity={0.75}>
-                        © 2025 The Apna Gym. All rights reserved. | Unleash Your Strength
+                        © {new Date().getFullYear()} The Apna Gym. All rights reserved. | Unleash Your Strength
+                    </Text>
+
+                    <Text fontSize="sm" opacity={0.6} mt={2}>
+                        Developed and maintained by{" "}
+                        <Link
+                            href="https://quartilelabs.com"
+                            target="_blank"
+                            className="text-primary"
+                        >
+                            Quartile Labs
+                        </Link>
                     </Text>
                 </Box>
+
             </Box>
         </Box>
     );

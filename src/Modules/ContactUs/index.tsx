@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Box,
     Heading,
@@ -24,6 +24,9 @@ export default function ContactusScreen() {
     });
 
     const [submitted, setSubmitted] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleInput = (e: any) => {
         const { name, value } = e.target;
@@ -35,22 +38,52 @@ export default function ContactusScreen() {
         }));
     };
 
-    const handleSubmit = (e: any) => {
+    // Auto-hide messages after 4 seconds
+    useEffect(() => {
+        if (success || error) {
+            const timer = setTimeout(() => {
+                setSuccess(false);
+                setError(false);
+            }, 4000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [success, error]);
+
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
+        setError(false);
+        setSuccess(false);
 
-        console.log("Form Submitted:", formData);
-        setSubmitted(true);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        console.log(formData)
 
-        setTimeout(() => {
-            setFormData({
-                name: "",
-                email: "",
-                phone: "",
-                subject: "",
-                message: "",
+        try {
+            const response = await fetch("https://formspree.io/f/xqavoqlk", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                },
+                body: formData,
             });
-            setSubmitted(false);
-        }, 2500);
+            console.log(response)
+
+            if (response.ok) {
+                setSuccess(true);
+                form.reset();
+                setSubmitted(false);
+            } else {
+                setError(true);
+            }
+        } catch (err) {
+            console.error("Form submit error:", err);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -163,7 +196,7 @@ export default function ContactusScreen() {
                             ) : (
                                 <Box
                                     as="form"
-                                    onSubmit={handleSubmit}
+                                    onSubmit={() => handleSubmit}
                                     display="flex"
                                     flexDirection="column"
                                     gap={6}
@@ -264,6 +297,13 @@ export default function ContactusScreen() {
                                     </Button>
                                 </Box>
                             )}
+                            {/* Success and Error Popups */}
+                            {success && (
+                                <p className="text-green-400 mt-4 text-center">✅ Message sent successfully!</p>
+                            )}
+                            {error && (
+                                <p className="text-red-400 mt-4 text-center">❌ Failed to send message. Please try again.</p>
+                            )}
                         </Box>
                     </Grid>
                 </Box>
@@ -282,19 +322,14 @@ export default function ContactusScreen() {
                     </Heading>
 
                     <Box
-                        bg="white"
-                        border="1px solid"
-                        borderColor="lightgray"
                         rounded="lg"
                         overflow="hidden"
-                        h="96"
+                        h="auto"
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
                     >
-                        <Text color="#484848" textAlign="center">
-                            📍 Google Maps Integration will appear here
-                        </Text>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3667.594977828793!2d82.9696925!3d23.184977999999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3989ab0054fbb62f%3A0x8c93794dc5786541!2sTHE%20APNA%20GYM!5e0!3m2!1sen!2sin!4v1764443494818!5m2!1sen!2sin" width="600" height="450" loading="lazy"></iframe>
                     </Box>
                 </Box>
             </Box>

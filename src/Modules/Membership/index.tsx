@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
     Box,
     Heading,
@@ -14,70 +14,77 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { Check, Search } from "lucide-react";
+import axios from "axios";
+
+interface Members {
+    id: number,
+    documentId: string,
+    full_name: string,
+    phone_number: number,
+    email: string,
+    membership_type: string,
+    start_date: string,
+    end_date: string,
+    is_active: boolean,
+    membership_status: string,
+    createdAt: string,
+    updatedAt: string,
+    publishedAt: string,
+}
 
 export default function MembershipScreen() {
     const [mobileNumber, setMobileNumber] = useState("");
     const [searched, setSearched] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [memberDetails, setMemberDetails] = useState<Members | null>(null)
+    const resultRef = useRef<HTMLDivElement | null>(null);
+    const notFoundRef = useRef<HTMLDivElement | null>(null);
 
-    // Mock Database
-    const mockMembers: Record<string, any> = {
-        "9876543210": {
-            name: "Raj Kumar",
-            plan: "Annual",
-            startDate: "2024-11-22",
-            endDate: "2025-11-25",
-            status: "active",
-            features: [
-                "Unlimited gym access",
-                "All equipment access",
-                "Premium locker facility",
-                "VIP support 24/7",
-                "4 Free fitness consultations",
-                "Free nutrition guide",
-            ],
-        },
-        "9123456789": {
-            name: "Priya Singh",
-            plan: "Half Yearly",
-            startDate: "2024-09-22",
-            endDate: "2025-03-22",
-            status: "active",
-            features: [
-                "Unlimited gym access",
-                "All equipment access",
-                "Premium locker facility",
-                "Priority support",
-                "1 Free fitness consultation",
-            ],
-        },
-        "8765432109": {
-            name: "Anil Patel",
-            plan: "Monthly",
-            startDate: "2025-10-22",
-            endDate: "2025-11-22",
-            status: "expired",
-            features: [
-                "Unlimited gym access",
-                "Basic equipment access",
-                "Locker facility",
-                "Standard support",
-            ],
-        },
-    };
-
-    const handleSearch = (e: any) => {
+    const handleSearch = async (e: any) => {
         e.preventDefault();
         setIsLoading(true);
 
-        setTimeout(() => {
+        try {
+            const res = await axios.get("http://elegant-bubble-93f708d80f.strapiapp.com/api/member/search", {
+                params: {
+                    "phone": mobileNumber,
+                },
+            });
+            if (res.data) {
+                setMemberDetails(res.data)
+                setTimeout(() => {
+                    resultRef.current?.scrollIntoView({ behavior: "smooth" });
+                }, 300);
+                setIsLoading(false);
+                setSearched(true);
+            }
+        } catch (err: any) {
+            setTimeout(() => {
+                notFoundRef.current?.scrollIntoView({ behavior: "smooth" });
+            }, 300);
             setIsLoading(false);
             setSearched(true);
-        }, 600);
+            setMemberDetails(null)
+        } finally {
+            setIsLoading(false);
+            setSearched(true);
+        }
     };
 
-    const member = mockMembers[mobileNumber];
-    const isActive = member?.status === "active";
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let isActive = false;
+
+    if (memberDetails?.end_date && memberDetails?.membership_status) {
+        const expiry = new Date(memberDetails.end_date);
+        expiry.setHours(0, 0, 0, 0);
+
+        isActive =
+            memberDetails.membership_status === "active" &&
+            expiry >= today;
+    }
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -88,9 +95,9 @@ export default function MembershipScreen() {
         });
     };
 
-    const daysRemaining = member
+    const daysRemaining = memberDetails
         ? Math.ceil(
-            (new Date(member.endDate).getTime() - new Date().getTime()) /
+            (new Date(memberDetails.end_date).getTime() - new Date().getTime()) /
             (1000 * 60 * 60 * 24)
         )
         : 0;
@@ -205,7 +212,7 @@ export default function MembershipScreen() {
                     <Box maxW="4xl" mx="auto" px={{ base: 4, sm: 6, lg: 8 }}>
 
                         {/* ACTIVE MEMBERSHIP */}
-                        {member && isActive && (
+                        {memberDetails && isActive && (
                             <Box>
                                 <Box
                                     bg={"primary"}
@@ -214,11 +221,12 @@ export default function MembershipScreen() {
                                     shadow="2xl"
                                     mb={10}
                                     color="white"
+                                    ref={resultRef}
                                 >
                                     <Flex justify="space-between" align="flex-start" mb={10}>
                                         <Box>
                                             <Heading fontSize={{ base: "2xl", md: "4xl" }} fontWeight="black">
-                                                {member.name}
+                                                {memberDetails.full_name}
                                             </Heading>
                                             <Text opacity={0.8}>Member ID: {mobileNumber}</Text>
                                         </Box>
@@ -243,9 +251,9 @@ export default function MembershipScreen() {
                                         mb={10}
                                     >
                                         {[
-                                            { label: "Plan", value: member.plan },
-                                            { label: "Valid From", value: formatDate(member.startDate) },
-                                            { label: "Expires On", value: formatDate(member.endDate) },
+                                            { label: "Plan", value: memberDetails.membership_type?.toUpperCase() },
+                                            { label: "Valid From", value: formatDate(memberDetails.start_date) },
+                                            { label: "Expires On", value: formatDate(memberDetails.end_date) },
                                             { label: "Days Remaining", value: daysRemaining },
                                         ].map((item, idx) => (
                                             <Box key={idx} bg="whiteAlpha.200" rounded="xl" p={4}>
@@ -260,20 +268,6 @@ export default function MembershipScreen() {
                                                     {item.value}
                                                 </Text>
                                             </Box>
-                                        ))}
-                                    </Grid>
-
-                                    {/* Features */}
-                                    <Text opacity={0.8} fontWeight="bold" mb={4}>
-                                        Your Benefits Include:
-                                    </Text>
-
-                                    <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
-                                        {member.features.map((feature: string, idx: number) => (
-                                            <Flex key={idx} gap={3}>
-                                                <Check size={22} color="#4ade80" />
-                                                <Text>{feature}</Text>
-                                            </Flex>
                                         ))}
                                     </Grid>
                                 </Box>
@@ -310,7 +304,7 @@ export default function MembershipScreen() {
                         )}
 
                         {/* EXPIRED MEMBERSHIP */}
-                        {member && !isActive && (
+                        {memberDetails && !isActive && (
                             <Box textAlign="center">
                                 <Box
                                     bg={"primary"}
@@ -318,11 +312,28 @@ export default function MembershipScreen() {
                                     p={{ base: 6, md: 12 }}
                                     shadow="2xl"
                                     mb={10}
+                                    ref={resultRef}
                                 >
-                                    <Heading fontSize={{ base: "2xl", md: "4xl" }} fontWeight="black">
-                                        {member.name}
-                                    </Heading>
-                                    <Text opacity={0.7}>Member ID: {mobileNumber}</Text>
+                                    <Flex justify="space-between" align="flex-start" mb={10}>
+                                        <Box>
+                                            <Heading fontSize={{ base: "2xl", md: "4xl" }} fontWeight="black">
+                                                {memberDetails.full_name}
+                                            </Heading>
+                                            <Text opacity={0.8}>Member ID: {mobileNumber}</Text>
+                                        </Box>
+
+                                        <Box
+                                            bg="green.400"
+                                            color="black"
+                                            px={6}
+                                            py={2}
+                                            rounded="full"
+                                            fontWeight="black"
+                                            shadow="lg"
+                                        >
+                                            Expired
+                                        </Box>
+                                    </Flex>
 
                                     <Grid
                                         mt={10}
@@ -334,7 +345,7 @@ export default function MembershipScreen() {
                                                 Plan
                                             </Text>
                                             <Text fontSize="2xl" fontWeight="black">
-                                                {member.plan}
+                                                {memberDetails.membership_type?.toUpperCase()}
                                             </Text>
                                         </Box>
 
@@ -343,7 +354,7 @@ export default function MembershipScreen() {
                                                 Valid From
                                             </Text>
                                             <Text fontSize="lg" fontWeight="black">
-                                                {formatDate(member.startDate)}
+                                                {formatDate(memberDetails.start_date)}
                                             </Text>
                                         </Box>
 
@@ -352,7 +363,7 @@ export default function MembershipScreen() {
                                                 Expired On
                                             </Text>
                                             <Text fontSize="lg" fontWeight="black">
-                                                {formatDate(member.endDate)}
+                                                {formatDate(memberDetails.end_date)}
                                             </Text>
                                         </Box>
                                     </Grid>
@@ -405,8 +416,8 @@ export default function MembershipScreen() {
                         )}
 
                         {/* NO MEMBERSHIP FOUND */}
-                        {!member && (
-                            <Box textAlign="center">
+                        {!memberDetails && (
+                            <Box textAlign="center" ref={notFoundRef}>
                                 <Box
                                     w="24"
                                     h="24"

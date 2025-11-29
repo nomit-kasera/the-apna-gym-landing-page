@@ -54,7 +54,7 @@ export default function AboutScreen() {
                             </Heading>
 
                             <Text fontSize="lg" color="#484848" mb={4}>
-                                Founded in 2015, The Apna Gym was born from a passion for fitness and
+                                Founded in 2025, The Apna Gym was born from a passion for fitness and
                                 community. We started with a simple vision: to create a gym that&apos;s
                                 not just about lifting weights, but about building a supportive community
                                 where everyone can achieve their fitness dreams.

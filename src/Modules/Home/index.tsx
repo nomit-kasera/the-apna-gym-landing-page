@@ -254,8 +254,33 @@ export default function HomeScreen() {
                         Choose the perfect plan for your fitness goals
                     </Text>
 
-                    <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={8}>
-                        {membershipPlans.map((plan, index) => (
+                    <Grid templateColumns={{ base: "1fr", md: "repeat(4, 1fr)" }} gap={8}>
+                        {[
+                            {
+                                name: "Monthly",
+                                duration: "1 Month",
+                                price: "₹1099",
+                                popular: false,
+                            },
+                            {
+                                name: "Quarterly",
+                                duration: "3 Months",
+                                price: "₹2699",
+                                popular: false,
+                            },
+                            {
+                                name: "Half Yearly",
+                                duration: "6 Months",
+                                price: "₹5099",
+                                popular: true, // MOST VALUABLE
+                            },
+                            {
+                                name: "Yearly",
+                                duration: "12 Months",
+                                price: "₹9999",
+                                popular: false,
+                            },
+                        ].map((plan, index) => (
                             <Box
                                 key={index}
                                 display="flex"
@@ -272,11 +297,18 @@ export default function HomeScreen() {
                                 _hover={{ transform: "scale(1.07)" }}
                             >
                                 {plan.popular && (
-                                    <Box bg={primaryColor} color="#FFFFFF" py={2} textAlign="center" fontWeight="bold">
-                                        MOST POPULAR
+                                    <Box
+                                        bg={primaryColor}
+                                        color="#FFFFFF"
+                                        py={2}
+                                        textAlign="center"
+                                        fontWeight="bold"
+                                    >
+                                        MOST VALUABLE
                                     </Box>
                                 )}
 
+                                {/* Content */}
                                 <Box p={8} flex="1" display="flex" flexDirection="column">
                                     <Text fontSize="2xl" fontWeight="bold" mb={2}>
                                         {plan.name}
@@ -290,26 +322,9 @@ export default function HomeScreen() {
                                         <Text fontSize="4xl" fontWeight="bold" color={primaryColor} mb={2}>
                                             {plan.price}
                                         </Text>
-                                        {plan.savings && (
-                                            <Text fontSize="sm" color={primaryColor} fontWeight="semibold">
-                                                {plan.savings}
-                                            </Text>
-                                        )}
                                     </Box>
 
-                                    {/* FEATURES */}
-                                    <VStack align="start" gap={4} mb={8}>
-                                        {plan.features.map((feature, idx) => (
-                                            <HStack key={idx} align="start" gap={3}>
-                                                <Text color={primaryColor} fontWeight="bold" mt={1}>
-                                                    ✓
-                                                </Text>
-                                                <Text>{feature}</Text>
-                                            </HStack>
-                                        ))}
-                                    </VStack>
-
-                                    {/* PUSH THE BUTTON TO BOTTOM */}
+                                    {/* Button */}
                                     <Box mt="auto">
                                         <Link href="/contact">
                                             <Button
@@ -326,11 +341,11 @@ export default function HomeScreen() {
                                     </Box>
                                 </Box>
                             </Box>
-
                         ))}
                     </Grid>
                 </Box>
             </Box>
+
 
             {/* CTA SECTION */}
             <Box bg="secondary" color="secondary-foreground" py={{ base: 16, md: 20 }}>
