@@ -45,7 +45,7 @@ export default function MembershipScreen() {
         setIsLoading(true);
 
         try {
-            const res = await axios.get("http://elegant-bubble-93f708d80f.strapiapp.com/api/member/search", {
+            const res = await axios.get("https://elegant-bubble-93f708d80f.strapiapp.com/api/member/search", {
                 params: {
                     "phone": mobileNumber,
                 },
