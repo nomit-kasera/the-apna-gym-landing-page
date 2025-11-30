@@ -99,7 +99,7 @@ export default function Footer() {
                         <VStack align="start" gap={2} fontSize="sm" opacity={0.9}>
                             <Text>Mon - Sat: 5AM - 10PM</Text>
                             <Text>Sun: 7AM - 8PM</Text>
-                            <Text>For Females: 2PM-5PM</Text>
+                            <Text>For Females: 2PM - 5PM</Text>
                             <Text>Holidays: Closed</Text>
                         </VStack>
                     </GridItem>

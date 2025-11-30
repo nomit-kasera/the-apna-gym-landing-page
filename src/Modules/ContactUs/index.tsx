@@ -123,22 +123,22 @@ export default function ContactusScreen() {
                                     {
                                         icon: <MapPin size={28} className="text-primary" />,
                                         title: "Address",
-                                        details: "123 Fitness Street\nCity, State 12345\nCountry",
+                                        details: "1st floor Sai Complex Main Road,\n Bishrampur, Chhattisgarh",
                                     },
                                     {
                                         icon: <Phone size={28} className="text-primary" />,
                                         title: "Phone",
-                                        details: "+91 98765-43210\nMon-Fri: 9AM - 6PM",
+                                        details: "+91 7999693682, +918234033694\nMon - Sun: 9AM - 6PM",
                                     },
                                     {
                                         icon: <Mail size={28} className="text-primary" />,
                                         title: "Email",
-                                        details: "info@theapnagym.com\nWe'll respond within 24 hours",
+                                        details: "theapnagym@gmail.com\nWe'll respond within 24 hours",
                                     },
                                     {
                                         icon: <Clock size={28} className="text-primary" />,
                                         title: "Hours",
-                                        details: "Mon-Fri: 6AM - 10PM\nSat-Sun: 7AM - 8PM",
+                                        details: "Mon - Sat: 5AM - 10PM\nSun: 7AM - 8PM \nFor Females: 2PM - 5PM \nHolidays: Closed",
                                     },
                                 ].map((item, index) => (
                                     <Flex key={index} gap={6} align="flex-start">
