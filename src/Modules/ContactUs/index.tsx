@@ -12,7 +12,7 @@ import {
     Textarea,
     Button,
 } from "@chakra-ui/react";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 
 export default function ContactusScreen() {
     const [formData, setFormData] = useState({
@@ -59,7 +59,6 @@ export default function ContactusScreen() {
 
         const form = e.currentTarget;
         const formData = new FormData(form);
-        console.log(formData)
 
         try {
             const response = await fetch("https://formspree.io/f/xqavoqlk", {
@@ -69,12 +68,18 @@ export default function ContactusScreen() {
                 },
                 body: formData,
             });
-            console.log(response)
 
             if (response.ok) {
                 setSuccess(true);
                 form.reset();
                 setSubmitted(false);
+                setFormData({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    subject: "",
+                    message: "",
+                })
             } else {
                 setError(true);
             }
@@ -194,13 +199,8 @@ export default function ContactusScreen() {
                                     <Text color="#484848">Thank you for contacting us. We&apos;ll get back to you soon.</Text>
                                 </Box>
                             ) : (
-                                <Box
-                                    as="form"
-                                    onSubmit={() => handleSubmit}
-                                    display="flex"
-                                    flexDirection="column"
-                                    gap={6}
-                                >
+                                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+
                                     {/* NAME */}
                                     <Box>
                                         <Text fontSize="sm" className="text-secondary" fontWeight="medium" mb={2}>
@@ -260,6 +260,7 @@ export default function ContactusScreen() {
                                             value={formData.subject}
                                             onInput={handleInput}
                                             required
+                                            style={{ border: "1px solid #e4e4e7", color: "black", height: "40px", borderRadius: "5px" }}
                                         >
                                             <option value="">Select a subject</option>
                                             <option value="membership">Membership Inquiry</option>
@@ -292,10 +293,12 @@ export default function ContactusScreen() {
                                         _hover={{ bg: "#ef4b6e", opacity: 0.9 }}
                                         py={6}
                                         fontWeight="bold"
+                                        disabled={loading}
                                     >
-                                        Send Message
+                                        <Send className="w-4 h-4 mr-2" />
+                                        {loading ? "Sending..." : "Send Message"}
                                     </Button>
-                                </Box>
+                                </form>
                             )}
                             {/* Success and Error Popups */}
                             {success && (

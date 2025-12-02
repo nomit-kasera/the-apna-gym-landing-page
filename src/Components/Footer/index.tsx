@@ -112,7 +112,7 @@ export default function Footer() {
                         © {new Date().getFullYear()} The Apna Gym. All rights reserved. | Unleash Your Strength
                     </Text>
 
-                    <Text fontSize="sm" opacity={0.6} mt={2}>
+                    <Text fontSize="sm" opacity={0.8} mt={2}>
                         Developed and maintained by{" "}
                         <Link
                             href="https://quartilelabs.com"
